@@ -1,7 +1,7 @@
 pipeline{
     agent any
-    environment {
-        GIT_CREDENTIALS_ID = 'Git_Pipeline'  // Add in Jenkins -> Credentials
+    parameters {
+        choice (name: 'select environment', choices: ['main', 'Dev', 'Staging'])
     }
     stages{
         stage('Checkout'){
@@ -11,14 +11,30 @@ pipeline{
         }
 
         stage('Build'){
+            when {
+                branch 'main' 
+            }
             steps{
                 echo"Building the artifact"
             }
         }
         stage('Test'){
-            steps{
-                echo"Testing the build"
+            parallel{
+                stage('Test1'){
+                    steps{
+                echo"Test 1 under progress"
+                    }
+                }
+
+                stage('Test2'){
+                    steps{
+                echo"Test 2 under progress"
+                    }
+                }
+
+               
             }
+            
         }
         stage('Deploy'){
             steps{
